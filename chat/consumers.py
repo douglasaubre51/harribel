@@ -22,7 +22,7 @@ class CustomConsumer(AsyncWebsocketConsumer):
 
         self.room_group_name = self.channel_group.channel_name
 
-        # add user to group
+        # add connection id to group
         await self.channel_layer.group_add(
                 self.room_group_name,
                 self.channel_name
@@ -38,12 +38,19 @@ class CustomConsumer(AsyncWebsocketConsumer):
                     'type': 'send_past_messages',
                     })
 
+    # message history pipeline
     async def send_past_messages(self,event):
         # get messages from db
-        messages = await sync_to_async(Message.objects.all.values)()
+        channel_group = self.channel_group
+        messages = await sync_to_async(list)(channel_group.messages.all().values())
+
+        # send msg to socket
+        payload = json.dumps(messages,
+                             default = str
+                             )
+        await self.send(text_data = payload)
 
 
-    # message pipeline
     async def receive(self,text_data):
         # json package
         json_text = json.loads(text_data)
@@ -59,6 +66,7 @@ class CustomConsumer(AsyncWebsocketConsumer):
 
         # send to all groups
         await self.channel_layer.group_send(
+        # message pipeline
                 self.room_group_name,
                 {
                     'type':'send_message',
