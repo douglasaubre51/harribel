@@ -48,15 +48,27 @@
       console.log(`socket connection destroyed: ${e}`);
     };
 
+    // set counter for msg history
+    let count = 0;
     // on incoming message
     socket.onmessage = function (e) {
-      let parsedData = JSON.parse(e.data);
+      // intercept chat history
+      let msgHistory = JSON.parse(e.data);
 
-      let msg = document.createElement("h4");
-      msg.setAttribute("class", "msg");
-      msg.innerHTML = parsedData.username + ":  " + parsedData.message;
+      if (count == 0) {
+        msgHistory.forEach((d) => {
+          console.log(d.text);
+        });
+        count++;
+      } else {
+        // incoming msg
+        let parsedData = JSON.parse(e.data);
+        let msg = document.createElement("h4");
+        msg.setAttribute("class", "msg");
+        msg.innerHTML = parsedData.username + ":  " + parsedData.message;
 
-      messageContainer.append(msg);
+        messageContainer.append(msg);
+      }
     };
 
     const messageBox = document.getElementById("message-box");
