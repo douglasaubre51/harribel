@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>chat room : {{ room_name }}</title>
+    <style>
+      .message-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    </style>
+  </head>
+
+  <body bgcolor="silver">
+    <h1>{{ room_name }}</h1>
+
+    <h3>send a message</h3>
+
+    <form>
+      <input type="text" id="message-box" />
+
+      <button type="button" id="send-message-btn">send</button>
+
+      <button type="reset">clear</button>
+    </form>
+
+    <br />
+    <hr />
+    <br />
+
+    <div id="message-container">
+      <h4 id="messages"></h4>
+    </div>
+  </body>
+
+  <script>
+    "use strict";
+    console.log("running room js...");
+
+    const messageContainer = document.getElementById("message-container");
+
+    const socket = new WebSocket(
+      "ws://" + window.location.host + "/room/" + "{{ room_name }}" + "/",
+    );
+
+    // on network loss
+    socket.onclose = function (e) {
+      console.log(`socket connection destroyed: ${e}`);
+    };
+
+    // on incoming message
+    socket.onmessage = function (e) {
+      let parsedData = JSON.parse(e.data);
+
+      let msg = document.createElement("h4");
+      msg.setAttribute("class", "msg");
+      msg.innerHTML = parsedData.username + ":  " + parsedData.message;
+
+      messageContainer.append(msg);
+    };
+
+    const messageBox = document.getElementById("message-box");
+
+    const sendMessageBtn = document.getElementById("send-message-btn");
+
+    sendMessageBtn.addEventListener("click", (e) => {
+      let data = messageBox.value;
+
+      if (data != "") {
+        socket.send(
+          JSON.stringify({
+            message: data,
+            username: "{{ request.user.username }}",
+          }),
+        );
+
+        messageBox.value = "";
+      } else {
+        console.log("empty message box");
+      }
+    });
+  </script>
+</html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>realtime chat demo</title>
+  </head>
+  <body bgcolor="silver">
+    <h1>say hello to realtime chat app!</h1>
+
+    <h3>choose a room u like to enter:</h3>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <input type="text" id="room-box" name="room-name" />
+
+      <button type="submit" id="enter-room-btn">enter room</button>
+      <button type="reset">clear</button>
+    </form>
+  </body>
+
+  <script>
+    "use strict";
+    console.log("he he he!");
+
+    const roomName = document.getElementById("room-box");
+    const enterRoomBtn = document.getElementById("enter-room-btn");
+  </script>
+</html>

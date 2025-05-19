@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>login page</title>
+
+    <style>
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        max-width: fit-content;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>login</h1>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <label> username </label>
+      <input type="text" name="username_box" />
+
+      <label> password </label>
+      <input type="password" name="password_box" />
+
+      <button type="reset">clear</button>
+      <button type="submit">continue</button>
+    </form>
+
+    {% if error %}
+    <span>{{error}}</span>
+    {% endif %}
+
+    <a href="sign-up/"> don't have an account? click here! </a>
+  </body>
+</html>

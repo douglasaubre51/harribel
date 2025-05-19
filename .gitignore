@@ -1,0 +1,61 @@
+# Django-specific files
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+
+# IDE-specific files (PyCharm, VS Code)
+.idea/
+.vscode/
+
+# Byte-compiled files
+*.py[cod]
+*$py.class
+
+# Coverage reports
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# Migrations (optional)
+# If you want to ignore migrations, uncomment the line below
+# **/migrations/*.pyc
+
+# Static and compiled assets
+staticfiles/
+node_modules/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Vim swap files
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+
+# Vim session files
+Session.vim
+
+# Vim temporary history files
+.netrwhist
+
+# Backup files
+*~
+
+# Auto-generated tag files
+tags
+
+# Persistent undo files
+[._]*.un~
