@@ -10,7 +10,8 @@ class Message(models.Model):
 
     channel_group = models.ForeignKey(
             ChannelGroup,
-            on_delete = models.CASCADE
+            on_delete = models.CASCADE,
+            related_name = 'messages'
             )
 
     text = models.CharField(max_length = 255)
