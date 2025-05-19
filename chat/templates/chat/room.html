@@ -3,11 +3,17 @@
   <head>
     <title>chat room : {{ room_name }}</title>
     <style>
-      .message-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
+.message-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+h4{
+  font-size:24px;
+}
+sub{
+  font-size:15px;
+}
     </style>
   </head>
 
@@ -29,6 +35,14 @@
     <br />
 
     <div id="message-container">
+      {% if messages %}
+      {% for i in messages %}
+      <h4 id='past-messages'>
+	{{ i.sender_name }} : {{ i.text }} <br> <sub> {{ i.sent_at }} </sub>
+      </h4>
+      {% endfor %}
+      {% endif %}
+
       <h4 id="messages"></h4>
     </div>
   </body>
@@ -48,27 +62,15 @@
       console.log(`socket connection destroyed: ${e}`);
     };
 
-    // set counter for msg history
-    let count = 0;
     // on incoming message
     socket.onmessage = function (e) {
-      // intercept chat history
-      let msgHistory = JSON.parse(e.data);
+      // incoming msg
+      let parsedData = JSON.parse(e.data);
+      let msg = document.createElement("h4");
+      msg.setAttribute("class", "msg");
+      msg.innerHTML = parsedData.username + ":  " + parsedData.message;
 
-      if (count == 0) {
-        msgHistory.forEach((d) => {
-          console.log(d.text);
-        });
-        count++;
-      } else {
-        // incoming msg
-        let parsedData = JSON.parse(e.data);
-        let msg = document.createElement("h4");
-        msg.setAttribute("class", "msg");
-        msg.innerHTML = parsedData.username + ":  " + parsedData.message;
-
-        messageContainer.append(msg);
-      }
+      messageContainer.append(msg);
     };
 
     const messageBox = document.getElementById("message-box");
@@ -79,16 +81,16 @@
       let data = messageBox.value;
 
       if (data != "") {
-        socket.send(
-          JSON.stringify({
-            message: data,
-            username: "{{ request.user.username }}",
-          }),
-        );
+	socket.send(
+	  JSON.stringify({
+	    message: data,
+	    username: "{{ request.user.username }}",
+	  }),
+	);
 
-        messageBox.value = "";
+	messageBox.value = "";
       } else {
-        console.log("empty message box");
+	console.log("empty message box");
       }
     });
   </script>
